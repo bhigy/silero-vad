@@ -1,6 +1,7 @@
 dependencies = ['torch', 'torchaudio']
 import torch
 import json
+import os
 from utils_vad import (init_jit_model,
                        get_speech_timestamps,
                        get_number_ts,
@@ -20,11 +21,11 @@ def silero_vad(onnx=False):
     Returns a model with a set of utils
     Please see https://github.com/snakers4/silero-vad for usage examples
     """
-    hub_dir = torch.hub.get_dir()
+    model_dir = os.path.join(os.path.dirname(__file__), 'files')
     if onnx:
-        model = OnnxWrapper(f'{hub_dir}/snakers4_silero-vad_master/files/silero_vad.onnx')
+        model = OnnxWrapper(os.path.join(model_dir, 'silero_vad.onnx'))
     else:
-        model = init_jit_model(model_path=f'{hub_dir}/snakers4_silero-vad_master/files/silero_vad.jit')
+        model = init_jit_model(os.path.join(model_dir, 'silero_vad.jit'))
     utils = (get_speech_timestamps,
              save_audio,
              read_audio,
